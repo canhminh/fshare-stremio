@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fshare Local Setup Wizard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex items-center justify-center p-4">
+  <div class="bg-slate-800 p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-700">
+    <h1 class="text-2xl font-bold mb-2 text-indigo-400">Fshare Go Engine</h1>
+    <p class="text-sm text-slate-400 mb-6">Running locally from your home network IP. Clean, fast, and light.</p>
+    
+    <div class="space-y-4">
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Fshare Email</label>
+        <input type="email" id="email" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-100 focus:outline-none focus:border-indigo-500">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Fshare Password</label>
+        <input type="password" id="password" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-100 focus:outline-none focus:border-indigo-500">
+      </div>
+      
+      <button onclick="generateLink()" class="w-full bg-indigo-600 hover:bg-indigo-700 font-medium py-2 px-4 rounded-lg transition-colors cursor-pointer mt-2">Generate Local Link</button>
+      
+      <div id="resultBlock" class="hidden mt-4 pt-4 border-t border-slate-700">
+        <label class="block text-xs font-semibold uppercase tracking-wider text-green-400 mb-1">Your Stremio Addon Link:</label>
+        <div class="flex gap-2">
+          <input type="text" id="manifestUrl" readonly class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-indigo-300 focus:outline-none">
+          <button onclick="copyLink()" class="bg-slate-700 hover:bg-slate-600 px-3 rounded-lg text-sm transition-colors cursor-pointer">Copy</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function generateLink() {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      if (!email || !password) return alert('Please complete the form.');
+      
+      const configObj = { email, password };
+      const base64Token = btoa(JSON.stringify(configObj));
+      document.getElementById('manifestUrl').value = window.location.origin + '/' + base64Token + '/manifest.json';
+      document.getElementById('resultBlock').classList.remove('hidden');
+    }
+
+    function copyLink() {
+      const copyText = document.getElementById('manifestUrl');
+      copyText.select();
+      document.execCommand('copy');
+      alert('Copied to clipboard!');
+    }
+  </script>
+</body>
+</html>
